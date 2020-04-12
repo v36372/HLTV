@@ -4,7 +4,7 @@
         "module": "commonjs",
         "lib": ["es2017", "dom"],
         "declaration": true,
-        "outDir": "./lib",
+        "outDir": "../node_modules/hltv",
         "rootDir": "./src",
         "removeComments": true,
         "strictNullChecks": true,
