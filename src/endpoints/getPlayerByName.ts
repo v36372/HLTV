@@ -3,7 +3,7 @@ import { FullPlayer } from '../models/FullPlayer'
 import HLTV from '../index'
 
 export const getPlayerByName = (config: HLTVConfig) => async ({
-  name
+  name,
 }: {
   name: string
 }): Promise<FullPlayer> => {

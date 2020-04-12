@@ -3,5 +3,5 @@ export enum WinType {
   TerroristsWin = 'Terrorists_Win',
   CTsWin = 'CTs_Win',
   TargetBombed = 'Target_Bombed',
-  BombDefused = 'Bomb_Defused'
+  BombDefused = 'Bomb_Defused',
 }

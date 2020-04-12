@@ -6,29 +6,21 @@ import { HLTVConfig } from '../config'
 import { fetchPage, toArray } from '../utils/mappers'
 
 export const getStreams = (config: HLTVConfig) => async ({
-  loadLinks
+  loadLinks,
 }: { loadLinks?: boolean } = {}): Promise<FullStream[]> => {
   const $ = await fetchPage(`${config.hltvUrl}`, config.loadPage)
 
   const streams = Promise.all(
-    toArray($('a.col-box.streamer')).map(async streamEl => {
+    toArray($('a.col-box.streamer')).map(async (streamEl) => {
       const name = streamEl.find('.name').text()
-      const category = streamEl
-        .children()
-        .first()
-        .attr('title') as StreamCategory
+      const category = streamEl.children().first().attr('title') as StreamCategory
 
       const country: Country = {
         name: streamEl.find('.flag').attr('title')!,
-        code: (popSlashSource(streamEl.find('.flag')) as string).split('.')[0]
+        code: (popSlashSource(streamEl.find('.flag')) as string).split('.')[0],
       }
 
-      const viewers = Number(
-        streamEl
-          .contents()
-          .last()
-          .text()
-      )
+      const viewers = Number(streamEl.contents().last().text())
       const hltvLink = streamEl.attr('href')!
 
       const stream = { name, category, country, viewers, hltvLink }

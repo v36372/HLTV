@@ -41,7 +41,7 @@ export interface FullTeamStats {
   currentLineup: Player[]
   historicPlayers: Player[]
   standins: Player[]
-  matches: TeamStatsMatch[]
+  // matches: TeamStatsMatch[]
   mapStats: { [key: string]: TeamMapStats }
   events: TeamStatsEvent[]
 }

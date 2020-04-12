@@ -9,7 +9,7 @@ export const getPlayerRanking = (config: HLTVConfig) => async ({
   startDate,
   endDate,
   matchType,
-  rankingFilter
+  rankingFilter,
 }: {
   startDate?: string
   endDate?: string
@@ -20,19 +20,13 @@ export const getPlayerRanking = (config: HLTVConfig) => async ({
     startDate,
     endDate,
     matchType,
-    rankingFilter
+    rankingFilter,
   })
 
   const $ = await fetchPage(`${config.hltvUrl}/stats/players?${query}`, config.loadPage)
 
-  const players = toArray($('.player-ratings-table tbody tr')).map(matchEl => {
-    var id = Number(
-      matchEl
-        .find('.playerCol a')
-        .first()
-        .attr('href')!
-        .split('/')[3]
-    )
+  const players = toArray($('.player-ratings-table tbody tr')).map((matchEl) => {
+    var id = Number(matchEl.find('.playerCol a').first().attr('href')!.split('/')[3])
     var name = matchEl.find('.playerCol').text()
     var rating = Number(matchEl.find('.ratingCol').text())
     return { id: id, name: name, rating: rating }

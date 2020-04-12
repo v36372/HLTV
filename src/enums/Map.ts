@@ -9,5 +9,5 @@ export enum Map {
   Cobblestone = 'de_cobblestone',
   Overpass = 'de_overpass',
   Tuscan = 'de_tuscan',
-  Vertigo = 'de_vertigo'
+  Vertigo = 'de_vertigo',
 }

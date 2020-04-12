@@ -1,4 +1,4 @@
 export enum EventSize {
   Small = 'small',
-  Big = 'big'
+  Big = 'big',
 }

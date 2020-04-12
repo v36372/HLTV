@@ -6,7 +6,7 @@ import {
   TeamStatComparison,
   PlayerPerformanceStats,
   PlayerStats,
-  PerformanceOverview
+  PerformanceOverview,
 } from '../models/FullMatchMapStats'
 import { RoundOutcome, WeakRoundOutcome } from '../models/RoundOutcome'
 import { Event } from '../models/Event'
@@ -17,7 +17,7 @@ import { fetchPage, toArray, getMapSlug, mapRoundElementToModel } from '../utils
 export type PlayerPerformanceStatsMap = { [key: number]: PlayerPerformanceStats }
 
 export const getMatchMapStats = (config: HLTVConfig) => async ({
-  id
+  id,
 }: {
   id: number
 }): Promise<FullMatchMapStats> => {
@@ -30,14 +30,12 @@ export const getMatchMapStats = (config: HLTVConfig) => async ({
 
     return {
       team1: stat1,
-      team2: stat2
+      team2: stat2,
     }
   }
 
   const getPlayerTopStat = ($: CheerioStatic, index: number): PlayerStat | undefined => {
-    const playerHref = $($('.most-x-box').get(index))
-      .find('.name > a')
-      .attr('href')
+    const playerHref = $($('.most-x-box').get(index)).find('.name > a').attr('href')
 
     if (!playerHref) {
       return undefined
@@ -45,67 +43,38 @@ export const getMatchMapStats = (config: HLTVConfig) => async ({
 
     return {
       id: Number(playerHref.split('/')[3]),
-      name: $($('.most-x-box').get(index))
-        .find('.name > a')
-        .text(),
-      value: Number(
-        $($('.most-x-box').get(index))
-          .find('.valueName')
-          .text()
-      )
+      name: $($('.most-x-box').get(index)).find('.name > a').text(),
+      value: Number($($('.most-x-box').get(index)).find('.valueName').text()),
     }
   }
 
   const [m$, p$] = await Promise.all([
     fetchPage(`${config.hltvUrl}/stats/matches/mapstatsid/${id}/-`, config.loadPage),
-    fetchPage(`${config.hltvUrl}/stats/matches/performance/mapstatsid/${id}/-`, config.loadPage)
+    fetchPage(`${config.hltvUrl}/stats/matches/performance/mapstatsid/${id}/-`, config.loadPage),
   ])
 
-  const matchPageID = Number(
-    m$('.match-page-link')
-      .attr('href')!
-      .split('/')[2]
-  )
+  const matchPageID = Number(m$('.match-page-link').attr('href')!.split('/')[2])
   const matchScore = [Number(m$('.team-left .bold').text()), Number(m$('.team-right .bold').text())]
 
-  const map = getMapSlug(
-    m$(
-      m$('.match-info-box')
-        .contents()
-        .get(3)
-    )
-      .text()
-      .replace(/\n| /g, '')
-  )
+  const map = getMapSlug(m$(m$('.match-info-box').contents().get(3)).text().replace(/\n| /g, ''))
 
-  const date = Number(
-    m$('.match-info-box .small-text span')
-      .first()
-      .attr('data-unix')
-  )
+  const date = Number(m$('.match-info-box .small-text span').first().attr('data-unix'))
 
   const team1: TeamStat = {
     id: Number(popSlashSource(m$('.team-left .team-logo'))),
     name: m$('.team-left .team-logo').attr('title')!,
-    score: matchScore[0]
+    score: matchScore[0],
   }
 
   const team2: TeamStat = {
     id: Number(popSlashSource(m$('.team-right .team-logo'))),
     name: m$('.team-right .team-logo').attr('title')!,
-    score: matchScore[1]
+    score: matchScore[1],
   }
 
   const event: Event = {
-    id: Number(
-      m$('.match-info-box .text-ellipsis')
-        .first()
-        .attr('href')!
-        .split('event=')[1]
-    ),
-    name: m$('.match-info-box .text-ellipsis')
-      .first()
-      .text()
+    id: Number(m$('.match-info-box .text-ellipsis').first().attr('href')!.split('event=')[1]),
+    name: m$('.match-info-box .text-ellipsis').first().text(),
   }
 
   const teamStatProperties = ['rating', 'firstKills', 'clutchesWon']
@@ -120,7 +89,7 @@ export const getMatchMapStats = (config: HLTVConfig) => async ({
     'mostAssists',
     'mostAWPKills',
     'mostFirstKills',
-    'bestRating'
+    'bestRating',
   ]
   const mostX = mostXProperties.reduce(
     (res, prop, i) => ({ ...res, [prop]: getPlayerTopStat(m$, i) }),
@@ -136,22 +105,17 @@ export const getMatchMapStats = (config: HLTVConfig) => async ({
 
   const roundHistory: RoundOutcome[] = rh1
     .reduce((history, round, i) => history.concat([round, rh2[i]]), [] as WeakRoundOutcome[])
-    .filter(r => r.outcome) as RoundOutcome[]
+    .filter((r) => r.outcome) as RoundOutcome[]
 
   const playerPerformanceStats: PlayerPerformanceStatsMap = toArray(
     p$('.highlighted-player')
   ).reduce((map, playerEl) => {
     const graphData = playerEl.find('.graph.small').attr('data-fusionchart-config')!
     const data = {
-      id: Number(
-        playerEl
-          .find('.headline span a')
-          .attr('href')!
-          .split('/')[2]
-      ),
+      id: Number(playerEl.find('.headline span a').attr('href')!.split('/')[2]),
       killsPerRound: Number(graphData.split('Kills per round: ')[1].split('"')[0]),
       deathsPerRound: Number(graphData.split('Deaths / round: ')[1].split('"')[0]),
-      impact: Number(graphData.split('Impact rating: ')[1].split('"')[0])
+      impact: Number(graphData.split('Impact rating: ')[1].split('"')[0]),
     }
 
     map[data.id] = data
@@ -159,63 +123,32 @@ export const getMatchMapStats = (config: HLTVConfig) => async ({
     return map
   }, {})
 
-  const playerOverviewStats: PlayerStats[] = toArray(m$('.stats-table tbody tr')).map(rowEl => {
-    const id = Number(
-      rowEl
-        .find('.st-player a')
-        .attr('href')!
-        .split('/')[3]
-    )
+  const playerOverviewStats: PlayerStats[] = toArray(m$('.stats-table tbody tr')).map((rowEl) => {
+    const id = Number(rowEl.find('.st-player a').attr('href')!.split('/')[3])
     const performanceStats = playerPerformanceStats[id]
 
     return {
       id,
       name: rowEl.find('.st-player a').text(),
-      kills: Number(
-        rowEl
-          .find('.st-kills')
-          .contents()
-          .first()
-          .text()
-      ),
-      hsKills: Number(
-        rowEl
-          .find('.st-kills .gtSmartphone-only')
-          .text()
-          .replace(/\(|\)/g, '')
-      ),
-      assists: Number(
-        rowEl
-          .find('.st-assists')
-          .contents()
-          .first()
-          .text()
-      ),
+      kills: Number(rowEl.find('.st-kills').contents().first().text()),
+      hsKills: Number(rowEl.find('.st-kills .gtSmartphone-only').text().replace(/\(|\)/g, '')),
+      assists: Number(rowEl.find('.st-assists').contents().first().text()),
       flashAssists: Number(
-        rowEl
-          .find('.st-assists .gtSmartphone-only')
-          .text()
-          .replace(/\(|\)/g, '')
+        rowEl.find('.st-assists .gtSmartphone-only').text().replace(/\(|\)/g, '')
       ),
       deaths: Number(rowEl.find('.st-deaths').text()),
-      KAST:
-        Number(
-          rowEl
-            .find('.st-kdratio')
-            .text()
-            .replace('%', '')
-        ) || undefined,
+      KAST: Number(rowEl.find('.st-kdratio').text().replace('%', '')) || undefined,
       killDeathsDifference: Number(rowEl.find('.st-kddiff').text()),
       ADR: Number(rowEl.find('.st-adr').text()) || undefined,
       firstKillsDifference: Number(rowEl.find('.st-fkdiff').text()),
       rating: Number(rowEl.find('.st-rating').text()),
-      ...performanceStats
+      ...performanceStats,
     } as PlayerStats
   })
 
   const playerStats = {
     team1: playerOverviewStats.slice(0, 5),
-    team2: playerOverviewStats.slice(5)
+    team2: playerOverviewStats.slice(5),
   }
 
   const performanceOverview = toArray(p$('.overview-table tr'))
@@ -228,7 +161,7 @@ export const getMatchMapStats = (config: HLTVConfig) => async ({
 
       return {
         team1: { ...res.team1, [property]: team1Stat },
-        team2: { ...res.team2, [property]: team2Stat }
+        team2: { ...res.team2, [property]: team2Stat },
       }
     }, {} as PerformanceOverview)
 
@@ -242,6 +175,6 @@ export const getMatchMapStats = (config: HLTVConfig) => async ({
     overview,
     roundHistory,
     playerStats,
-    performanceOverview
+    performanceOverview,
   }
 }

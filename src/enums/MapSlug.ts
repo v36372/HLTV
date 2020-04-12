@@ -11,5 +11,5 @@ export enum MapSlug {
   Tuscan = 'tcn',
   Vertigo = 'vertigo',
   Season = '-',
-  Default = '-'
+  Default = '-',
 }

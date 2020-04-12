@@ -3,5 +3,5 @@ export enum MatchStatus {
   Postponed = 'Match postponed',
   Over = 'Match over',
   Scheduled = 'Scheduled',
-  Deleted = 'Match deleted'
+  Deleted = 'Match deleted',
 }

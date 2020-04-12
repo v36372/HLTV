@@ -12,7 +12,7 @@ export const getPlayerStats = (config: HLTVConfig) => async ({
   startDate,
   endDate,
   matchType,
-  rankingFilter
+  rankingFilter,
 }: {
   id: number
   startDate?: string
@@ -24,7 +24,7 @@ export const getPlayerStats = (config: HLTVConfig) => async ({
     startDate,
     endDate,
     matchType,
-    rankingFilter
+    rankingFilter,
   })
 
   const $ = await fetchPage(`${config.hltvUrl}/stats/players/${id}/-?${query}`, config.loadPage)
@@ -40,7 +40,7 @@ export const getPlayerStats = (config: HLTVConfig) => async ({
   const flagEl = $('.summaryRealname .flag')
   const country = {
     name: flagEl.attr('title')!,
-    code: popSlashSource(flagEl)!.split('.')[0]
+    code: popSlashSource(flagEl)!.split('.')[0],
   }
 
   const teamNameEl = $('.SummaryTeamname')
@@ -48,21 +48,11 @@ export const getPlayerStats = (config: HLTVConfig) => async ({
     teamNameEl.text() !== 'No team'
       ? {
           name: teamNameEl.text(),
-          id: Number(
-            teamNameEl
-              .find('a')
-              .attr('href')!
-              .split('/')[3]
-          )
+          id: Number(teamNameEl.find('a').attr('href')!.split('/')[3]),
         }
       : undefined
 
-  const getStats = (i: number) =>
-    $(
-      $($('.stats-row').get(i))
-        .find('span')
-        .get(1)
-    ).text()
+  const getStats = (i: number) => $($($('.stats-row').get(i)).find('span').get(1)).text()
 
   const statistics = {
     kills: getStats(0),
@@ -78,7 +68,7 @@ export const getPlayerStats = (config: HLTVConfig) => async ({
     deathsPerRound: getStats(10),
     savedByTeammatePerRound: getStats(11),
     savedTeammatesPerRound: getStats(12),
-    rating: getStats(13)
+    rating: getStats(13),
   }
 
   return { name, ign, image, age, country, team, statistics }

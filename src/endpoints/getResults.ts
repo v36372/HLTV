@@ -15,7 +15,7 @@ export const getResults = (config: HLTVConfig) => async ({
   pages = 1,
   teamID,
   eventID,
-  contentFilters = []
+  contentFilters = [],
 }: GetResultsArguments): Promise<MatchResult[]> => {
   if (pages < 1) {
     console.error('getLatestResults: pages cannot be less than 1')
@@ -37,24 +37,18 @@ export const getResults = (config: HLTVConfig) => async ({
 
     matches = matches.concat(
       toArray($('.results-holder > .results-all > .results-sublist .result-con .a-reset')).map(
-        matchEl => {
+        (matchEl) => {
           const id = Number(matchEl.attr('href')!.split('/')[2])
           const stars = matchEl.find('.stars i').length
 
           const team1: Team = {
             id: Number(popSlashSource(matchEl.find('img.team-logo').first())),
-            name: matchEl
-              .find('div.team')
-              .first()
-              .text()
+            name: matchEl.find('div.team').first().text(),
           }
 
           const team2: Team = {
             id: Number(popSlashSource(matchEl.find('img.team-logo').last())),
-            name: matchEl
-              .find('div.team')
-              .last()
-              .text()
+            name: matchEl.find('div.team').last().text(),
           }
 
           const result = matchEl.find('.result-score').text()
@@ -74,15 +68,13 @@ export const getResults = (config: HLTVConfig) => async ({
 
           const event: Event = {
             name: nameOfEvent,
-            id: Number(idOfEvent)
+            id: Number(idOfEvent),
           }
 
           let eventDate =
             typeof eventID === 'undefined'
               ? matchEl.parent().attr('data-zonedgrouping-entry-unix')
-              : $('.eventdate span')
-                  .first()
-                  .data('unix')
+              : $('.eventdate span').first().data('unix')
 
           const date = Number(eventDate)
 

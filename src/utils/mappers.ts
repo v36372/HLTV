@@ -10,7 +10,7 @@ import { Agent as HttpsAgent } from 'https'
 import { Agent as HttpAgent } from 'http'
 
 export const defaultLoadPage = (httpAgent: HttpsAgent | HttpAgent | undefined) => (url: string) =>
-  new Promise<string>(resolve => {
+  new Promise<string>((resolve) => {
     request.get(url, { gzip: true, agent: httpAgent }, (_, __, body) => resolve(body))
   })
 
@@ -33,21 +33,21 @@ export const mapVetoElementToModel = (el: Cheerio, team1: Team, team2: Team): Ve
   if (!map || !teamName) {
     return {
       map: getMapSlug(el.text().split(' ')[1]),
-      type: 'other'
+      type: 'other',
     }
   }
 
   return {
-    team: [team1, team2].find(t => t.name === teamName.trim())!,
+    team: [team1, team2].find((t) => t.name === teamName.trim())!,
     map: getMapSlug(map.trim()),
-    type: el.text().includes('picked') ? 'picked' : 'removed'
+    type: el.text().includes('picked') ? 'picked' : 'removed',
   }
 }
 
 export const getMatchPlayer = (playerEl: Cheerio): Player => {
   return {
     name: playerEl.find('.text-ellipsis').text(),
-    id: playerEl.data('player-id')
+    id: playerEl.data('player-id'),
   }
 }
 
@@ -81,7 +81,7 @@ export const mapRoundElementToModel = (team1Id: number, team2Id: number) => (
         firstHalfCt: team1Id,
         secondHalfCt: team2Id,
         firstHalfT: team2Id,
-        secondHalfT: team1Id
+        secondHalfT: team1Id,
       }
     }
 
@@ -89,7 +89,7 @@ export const mapRoundElementToModel = (team1Id: number, team2Id: number) => (
       firstHalfCt: team2Id,
       secondHalfCt: team1Id,
       firstHalfT: team1Id,
-      secondHalfT: team2Id
+      secondHalfT: team2Id,
     }
   }
 
@@ -106,8 +106,8 @@ export const mapRoundElementToModel = (team1Id: number, team2Id: number) => (
   const ctOutcomes = [Outcome.BombDefused, Outcome.CTWin, Outcome.TimeRanOut]
   const tOutcomes = [Outcome.BombExploded, Outcome.TWin]
 
-  const ctOutcomeMarker = allRoundEls.findIndex(x => ctOutcomes.includes(getOutcome(x)!))
-  const tOutcomeMarker = allRoundEls.findIndex(x => tOutcomes.includes(getOutcome(x)!))
+  const ctOutcomeMarker = allRoundEls.findIndex((x) => ctOutcomes.includes(getOutcome(x)!))
+  const tOutcomeMarker = allRoundEls.findIndex((x) => tOutcomes.includes(getOutcome(x)!))
 
   const outcomeSideInfo =
     ctOutcomeMarker !== -1
@@ -120,7 +120,7 @@ export const mapRoundElementToModel = (team1Id: number, team2Id: number) => (
     outcome,
     score: el.attr('title')!,
     ctTeam: isFirstHalf ? outcomeSideInfo.firstHalfCt : outcomeSideInfo.secondHalfCt,
-    tTeam: isFirstHalf ? outcomeSideInfo.firstHalfT : outcomeSideInfo.secondHalfT
+    tTeam: isFirstHalf ? outcomeSideInfo.firstHalfT : outcomeSideInfo.secondHalfT,
   }
 }
 

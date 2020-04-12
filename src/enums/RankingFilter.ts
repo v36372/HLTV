@@ -3,5 +3,5 @@ export enum RankingFilter {
   Top10 = 'Top10',
   Top20 = 'Top20',
   Top30 = 'Top30',
-  Top50 = 'Top50'
+  Top50 = 'Top50',
 }

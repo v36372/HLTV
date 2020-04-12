@@ -4,5 +4,5 @@ export enum EventType {
   InternationalLan = 'INTLLAN',
   RegionalLan = 'REGIONALLAN',
   Major = 'MAJOR',
-  Other = 'OTHER'
+  Other = 'OTHER',
 }

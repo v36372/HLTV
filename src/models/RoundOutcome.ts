@@ -3,7 +3,7 @@ export enum Outcome {
   TWin = 't_win',
   BombDefused = 'bomb_defused',
   BombExploded = 'bomb_exploded',
-  TimeRanOut = 'stopwatch'
+  TimeRanOut = 'stopwatch',
 }
 
 export interface WeakRoundOutcome {

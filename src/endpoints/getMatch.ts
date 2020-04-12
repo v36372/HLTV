@@ -18,30 +18,20 @@ import {
   toArray,
   mapVetoElementToModel,
   getMapSlug,
-  getMatchPlayer
+  getMatchPlayer,
 } from '../utils/mappers'
 
 export const getMatch = (config: HLTVConfig) => async ({
-  id
+  id,
 }: {
   id: number
 }): Promise<FullMatch> => {
   const $ = await fetchPage(`${config.hltvUrl}/matches/${id}/-`, config.loadPage)
 
-  const title =
-    $('.timeAndEvent .text')
-      .text()
-      .trim() || undefined
+  const title = $('.timeAndEvent .text').text().trim() || undefined
   const date = Number($('.timeAndEvent .date').attr('data-unix'))
-  const format = $('.preformatted-text')
-    .text()
-    .split('\n')[0]
-  const additionalInfo = $('.preformatted-text')
-    .text()
-    .split('\n')
-    .slice(1)
-    .join(' ')
-    .trim()
+  const format = $('.preformatted-text').text().split('\n')[0]
+  const additionalInfo = $('.preformatted-text').text().split('\n').slice(1).join(' ').trim()
 
   let status = MatchStatus.Scheduled
   if (!$('.countdown').attr('data-time-countdown')) {
@@ -57,89 +47,49 @@ export const getMatch = (config: HLTVConfig) => async ({
   const team1: Team | undefined = teamEls.first().text()
     ? {
         name: teamEls.eq(0).text(),
-        id: Number(popSlashSource(teamEls.first().prev()))
+        id: Number(popSlashSource(teamEls.first().prev())),
       }
     : undefined
 
   const team2: Team | undefined = teamEls.last().text()
     ? {
         name: teamEls.eq(1).text(),
-        id: Number(popSlashSource(teamEls.last().prev()))
+        id: Number(popSlashSource(teamEls.last().prev())),
       }
     : undefined
 
   let winnerTeam: Team | undefined
 
-  if (
-    $('.team1-gradient')
-      .children()
-      .last()
-      .hasClass('won')
-  ) {
+  if ($('.team1-gradient').children().last().hasClass('won')) {
     winnerTeam = team1
   }
 
-  if (
-    $('.team2-gradient')
-      .children()
-      .last()
-      .hasClass('won')
-  ) {
+  if ($('.team2-gradient').children().last().hasClass('won')) {
     winnerTeam = team2
   }
 
   let vetoes: Veto[] | undefined
 
   if (team1 && team2) {
-    vetoes = toArray(
-      $('.veto-box')
-        .last()
-        .find('.padding > div')
-    )
+    vetoes = toArray($('.veto-box').last().find('.padding > div'))
       .slice(0, -1)
-      .map(el => mapVetoElementToModel(el, team1, team2))
+      .map((el) => mapVetoElementToModel(el, team1, team2))
   }
 
   const event: Event = {
     name: $('.timeAndEvent .event').text(),
-    id: Number(
-      $('.timeAndEvent .event')
-        .children()
-        .first()
-        .attr('href')!
-        .split('/')[2]
-    )
+    id: Number($('.timeAndEvent .event').children().first().attr('href')!.split('/')[2]),
   }
 
   const odds: OddResult[] = toArray($('tr.provider:not(.hidden)'))
     .filter(hasNoChild('.noOdds'))
-    .map(oddElement => {
+    .map((oddElement) => {
       let convertOdds =
-        oddElement
-          .find('.odds-cell')
-          .first()
-          .text()
-          .indexOf('%') >= 0
-          ? true
-          : false
+        oddElement.find('.odds-cell').first().text().indexOf('%') >= 0 ? true : false
 
-      let oddTeam1 = Number(
-        oddElement
-          .find('.odds-cell')
-          .first()
-          .find('a')
-          .text()
-          .replace('%', '')
-      )
+      let oddTeam1 = Number(oddElement.find('.odds-cell').first().find('a').text().replace('%', ''))
 
-      let oddTeam2 = Number(
-        oddElement
-          .find('.odds-cell')
-          .last()
-          .find('a')
-          .text()
-          .replace('%', '')
-      )
+      let oddTeam2 = Number(oddElement.find('.odds-cell').last().find('a').text().replace('%', ''))
 
       if (convertOdds) {
         oddTeam1 = percentageToDecimalOdd(oddTeam1)
@@ -147,13 +97,9 @@ export const getMatch = (config: HLTVConfig) => async ({
       }
 
       return {
-        provider: oddElement
-          .prop('class')
-          .split('geoprovider_')[1]
-          .split(' ')[0]
-          .trim(),
+        provider: oddElement.prop('class').split('geoprovider_')[1].split(' ')[0].trim(),
         team1: oddTeam1,
-        team2: oddTeam2
+        team2: oddTeam2,
       }
     })
 
@@ -162,51 +108,25 @@ export const getMatch = (config: HLTVConfig) => async ({
   if ($('.pick-a-winner-team').length == 2) {
     oddsCommunity = {
       team1: percentageToDecimalOdd(
-        Number(
-          $('.pick-a-winner-team')
-            .first()
-            .find('.percentage')
-            .text()
-            .replace('%', '')
-        )
+        Number($('.pick-a-winner-team').first().find('.percentage').text().replace('%', ''))
       ),
       team2: percentageToDecimalOdd(
-        Number(
-          $('.pick-a-winner-team')
-            .last()
-            .find('.percentage')
-            .text()
-            .replace('%', '')
-        )
-      )
+        Number($('.pick-a-winner-team').last().find('.percentage').text().replace('%', ''))
+      ),
     }
   }
 
-  const maps: MapResult[] = toArray($('.mapholder')).map(mapEl => {
-    const team1Rounds = mapEl
-      .find('.results-left .results-team-score')
-      .text()
-      .trim()
-    const team2Rounds = mapEl
-      .find('.results-right .results-team-score')
-      .text()
-      .trim()
-    const halfs = mapEl
-      .find('.results-center-half-score')
-      .text()
-      .trim()
+  const maps: MapResult[] = toArray($('.mapholder')).map((mapEl) => {
+    const team1Rounds = mapEl.find('.results-left .results-team-score').text().trim()
+    const team2Rounds = mapEl.find('.results-right .results-team-score').text().trim()
+    const halfs = mapEl.find('.results-center-half-score').text().trim()
 
     return {
       name: getMapSlug(mapEl.find('.mapname').text()),
       result: team1Rounds ? `${team1Rounds}:${team2Rounds} ${halfs}` : undefined,
       statsId: mapEl.find('.results-stats').length
-        ? Number(
-            mapEl
-              .find('.results-stats')
-              .attr('href')!
-              .split('/')[4]
-          )
-        : undefined
+        ? Number(mapEl.find('.results-stats').attr('href')!.split('/')[4])
+        : undefined,
     }
   })
 
@@ -214,52 +134,41 @@ export const getMatch = (config: HLTVConfig) => async ({
 
   if (team1 && team2) {
     players = {
-      team1: toArray(
-        $('div.players')
-          .first()
-          .find('tr')
-          .last()
-          .find('.flagAlign')
-      ).map(getMatchPlayer),
-      team2: toArray(
-        $('div.players')
-          .last()
-          .find('tr')
-          .last()
-          .find('.flagAlign')
-      ).map(getMatchPlayer)
+      team1: toArray($('div.players').first().find('tr').last().find('.flagAlign')).map(
+        getMatchPlayer
+      ),
+      team2: toArray($('div.players').last().find('tr').last().find('.flagAlign')).map(
+        getMatchPlayer
+      ),
     }
   }
 
   let streams: Stream[] = toArray($('.stream-box-embed'))
     .filter(hasChild('.flagAlign'))
-    .map(streamEl => ({
+    .map((streamEl) => ({
       name: streamEl.find('.flagAlign').text(),
       link: streamEl.attr('data-stream-embed')!,
-      viewers: Number(streamEl.find('.viewers').text())
+      viewers: Number(streamEl.find('.viewers').text()),
     }))
 
   if ($('.stream-box.hltv-live').length !== 0) {
     streams.push({
       name: 'HLTV Live',
       link: $('.stream-box.hltv-live a').attr('href')!,
-      viewers: 0
+      viewers: 0,
     })
   }
 
   if ($('.stream-box.gotv').length !== 0) {
     streams.push({
       name: 'GOTV',
-      link: $('.stream-box.gotv')
-        .text()
-        .replace('GOTV: connect', '')
-        .trim(),
-      viewers: 0
+      link: $('.stream-box.gotv').text().replace('GOTV: connect', '').trim(),
+      viewers: 0,
     })
   }
 
   const demos: Demo[] = toArray($('div[class="stream-box"]:not(:has(.stream-box-embed))')).map(
-    demoEl => {
+    (demoEl) => {
       const gotvEl = demoEl.find('.left-right-padding')
 
       if (gotvEl.length !== 0) {
@@ -278,14 +187,14 @@ export const getMatch = (config: HLTVConfig) => async ({
   const highlightedPlayer: Player | undefined = highlightedPlayerLink
     ? {
         name: highlightedPlayerLink.split('/').pop()!,
-        id: Number(highlightedPlayerLink.split('/')[2])
+        id: Number(highlightedPlayerLink.split('/')[2]),
       }
     : undefined
 
   let headToHead: HeadToHeadResult[] | undefined
 
   if (team1 && team2) {
-    headToHead = toArray($('.head-to-head-listing tr')).map(matchEl => {
+    headToHead = toArray($('.head-to-head-listing tr')).map((matchEl) => {
       const date = Number(matchEl.find('.date a span').attr('data-unix'))
       const map = matchEl.find('.dynamic-map-name-short').text() as MapSlug
       const isDraw = matchEl.find('.winner').length === 0
@@ -294,28 +203,14 @@ export const getMatch = (config: HLTVConfig) => async ({
 
       if (!isDraw) {
         winner = {
-          name: matchEl
-            .find('.winner .flag')
-            .next()
-            .text(),
-          id: Number(
-            matchEl
-              .find('.winner .flag')
-              .next()
-              .attr('href')!
-              .split('/')[2]
-          )
+          name: matchEl.find('.winner .flag').next().text(),
+          id: Number(matchEl.find('.winner .flag').next().attr('href')!.split('/')[2]),
         }
       }
 
       const event = {
         name: matchEl.find('.event a').text(),
-        id: Number(
-          matchEl
-            .find('.event a')
-            .attr('href')!
-            .split('/')[2]
-        )
+        id: Number(matchEl.find('.event a').attr('href')!.split('/')[2]),
       }
 
       const result = matchEl.find('.result').text()
@@ -327,9 +222,9 @@ export const getMatch = (config: HLTVConfig) => async ({
   let highlights: Highlight[] | undefined
 
   if (team1 && team2) {
-    highlights = toArray($('.highlight')).map(highlightEl => ({
+    highlights = toArray($('.highlight')).map((highlightEl) => ({
       link: highlightEl.attr('data-highlight-embed')!,
-      title: highlightEl.text()
+      title: highlightEl.text(),
     }))
   }
 
@@ -367,6 +262,6 @@ export const getMatch = (config: HLTVConfig) => async ({
     highlights,
     demos,
     odds,
-    oddsCommunity
+    oddsCommunity,
   }
 }

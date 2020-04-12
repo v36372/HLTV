@@ -86,5 +86,5 @@ export {
   ThreadCategory,
   WinType,
   EventSize,
-  ContentFilter
+  ContentFilter,
 }
