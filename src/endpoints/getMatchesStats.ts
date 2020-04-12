@@ -11,14 +11,16 @@ export const getMatchesStats = (config: HLTVConfig) => async ({
   startDate,
   endDate,
   matchType,
-  maps = []
+  maps = [],
+  rankingFilter
 }: {
   startDate?: string
   endDate?: string
   matchType?: MatchType
   maps?: Map[]
+  rankingFilter?: RankingFilter
 } = {}): Promise<MatchStats[]> => {
-  const query = `startDate=${startDate}&endDate=${endDate}&matchtype=${matchType}${[
+  const query = `startDate=${startDate}&endDate=${endDate}&rankingFilter=${rankingFilter}&matchtype=${matchType}${[
     '',
     ...maps
   ].join('&maps=')}`
