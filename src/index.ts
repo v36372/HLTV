@@ -11,6 +11,7 @@ import { getStreams } from './endpoints/getStreams'
 import { getTeamRanking } from './endpoints/getTeamRanking'
 import { getTeam } from './endpoints/getTeam'
 import { getTeamStats } from './endpoints/getTeamStats'
+import { getTeamExtraStats } from './endpoints/getTeamExtraStats'
 import { getPlayer } from './endpoints/getPlayer'
 import { getPlayerByName } from './endpoints/getPlayerByName'
 import { getEvent } from './endpoints/getEvent'
@@ -59,6 +60,7 @@ export class HLTVFactory {
   getTeamRanking = getTeamRanking(this.config)
   getTeam = getTeam(this.config)
   getTeamStats = getTeamStats(this.config)
+  getTeamExtraStats = getTeamExtraStats(this.config)
   getPlayer = getPlayer(this.config)
   getPlayerByName = getPlayerByName(this.config)
   getEvent = getEvent(this.config)
