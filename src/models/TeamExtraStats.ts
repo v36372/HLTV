@@ -4,7 +4,7 @@ export interface TeamFTUStats {
   id: number,
   name: string,
   maps_played: number,
-  p_round_wins: number,
+  p_round_wins: string,
   p_opk: string,
   p_multik: string
   p_5vs4: string,

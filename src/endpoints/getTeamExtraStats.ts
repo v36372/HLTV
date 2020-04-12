@@ -1,8 +1,9 @@
-import { TeamExtraStats } from '../models/TeamExtraStats'
+import { TeamExtraStats, TeamFTUStats, TeamPistolStats } from '../models/TeamExtraStats'
 import { Team } from '../models/Team'
 import { HLTVConfig } from '../config'
 import { fetchPage, toArray } from '../utils/mappers'
 import { RankingFilter } from '../enums/RankingFilter'
+import { stringify } from 'querystring'
 
 export const getTeamStats = (config: HLTVConfig) => async ({
 	startDate,
@@ -24,9 +25,9 @@ export const getTeamStats = (config: HLTVConfig) => async ({
 	let teamsExtraStats: TeamExtraStats[] = []
 	const ftu_array: TeamFTUStats[] = toArray(f$('.stats-table tbody tr')).map(rowEl => {
 		const columns = toArray(rowEl.find('td'))
-		const id = columns[0].attr('href')!.split('/')[3]
+		const id = Number(columns[0].attr('href')!.split('/')[3])
 		const name = columns[0].text()
-		const maps_played = columns[1].text()
+		const maps_played = Number(columns[1].text())
 		const p_round_wins = columns[2].text()
 		const p_opk = columns[3].text()
 		const p_multik = columns[4].text()
@@ -41,7 +42,7 @@ export const getTeamStats = (config: HLTVConfig) => async ({
 
 	const pistols_array: TeamPistolStats[] = toArray(p$('.stats-table tbody tr')).map(rowEl => {
 		const columns = toArray(rowEl.find('td'))
-		const id = columns[0].attr('href')!.split('/')[3]
+		const id = Number(columns[0].attr('href')!.split('/')[3])
 		const name = columns[0].text()
 		const p_win = columns[3].text()
 		const p_2_conv = columns[4].text()

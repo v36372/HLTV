@@ -6,6 +6,7 @@ import { Map } from '../enums/Map'
 import { MapSlug } from '../enums/MapSlug'
 import { HLTVConfig } from '../config'
 import { fetchPage, toArray } from '../utils/mappers'
+import { RankingFilter } from '../enums/RankingFilter'
 
 export const getMatchesStats = (config: HLTVConfig) => async ({
   startDate,
