@@ -57,6 +57,10 @@
     "typescript": "^3.5.2"
   },
   "dependencies": {
+    "@types/cheerio": "^0.22.9",
+    "@types/jest": "^25.1.1",
+    "@types/request": "^2.47.1",
+    "@types/socket.io-client": "^1.4.32",
     "cheerio": "^1.0.0-rc.2",
     "request": "^2.88.0",
     "typescript": "3.8.3",
