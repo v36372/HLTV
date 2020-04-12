@@ -24,6 +24,8 @@ export interface TeamPistolStats {
 
 export interface TeamExtraStats {
   team: Team
-  ftu: TeamFTUStats
-  pistol: TeamPistolStats
+  ftu_ct: TeamFTUStats
+  ftu_t: TeamFTUStats
+  pistol_ct: TeamPistolStats
+  pistol_t: TeamPistolStats
 }
