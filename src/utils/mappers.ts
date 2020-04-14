@@ -10,8 +10,12 @@ import { Agent as HttpsAgent } from 'https'
 import { Agent as HttpAgent } from 'http'
 
 export const defaultLoadPage = (httpAgent: HttpsAgent | HttpAgent | undefined) => (url: string) =>
-  new Promise<string>((resolve) => {
-    request.get(url, { gzip: true, agent: httpAgent }, (_, __, body) => resolve(body))
+  new Promise<string>((resolve, reject) => {
+    request.get(url, { gzip: true, agent: httpAgent }, (_, resp, body) => {
+      console.log(resp.statusCode)
+      if (resp.statusCode == 429) reject([resp.statusCode, url])
+      else resolve(body)
+    })
   })
 
 export const fetchPage = async (

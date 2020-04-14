@@ -28,6 +28,8 @@ import { EventSize } from './enums/EventSize'
 import { WinType } from './enums/WinType'
 import { getEvents } from './endpoints/getEvents'
 import { defaultLoadPage } from './utils/mappers'
+import { Agent as HttpsAgent } from 'https'
+import { Agent as HttpAgent } from 'http'
 
 export class HLTVFactory {
   constructor(private readonly config: HLTVConfig) {
@@ -70,6 +72,11 @@ export class HLTVFactory {
 
   public createInstance(config: HLTVConfig) {
     return new HLTVFactory(config)
+  }
+
+  public changeAgent(newAgent: HttpsAgent | HttpAgent) {
+    this.config.httpAgent = newAgent
+    this.config.loadPage = defaultLoadPage(this.config.httpAgent)
   }
 }
 
