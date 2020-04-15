@@ -62,8 +62,9 @@
     "@types/request": "^2.47.1",
     "@types/socket.io-client": "^1.4.32",
     "cheerio": "^1.0.0-rc.2",
+    "https-proxy-agent": "^5.0.0",
     "request": "^2.88.0",
-    "typescript": "3.8.3",
-    "socket.io-client": "^2.1.0"
+    "socket.io-client": "^2.1.0",
+    "typescript": "3.8.3"
   }
 }

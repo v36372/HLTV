@@ -1,15 +1,14 @@
 import { defaultLoadPage } from './utils/mappers'
-import { Agent as HttpsAgent } from 'https'
-import { Agent as HttpAgent } from 'http'
+import { HttpsProxyAgent } from 'https-proxy-agent'
 
 export interface HLTVConfig {
   hltvUrl?: string
   hltvStaticUrl?: string
   loadPage?: (url: string) => Promise<string>
-  httpAgent?: HttpsAgent | HttpAgent
+  httpAgent?: HttpsProxyAgent
 }
 
-const defaultAgent = new HttpsAgent()
+const defaultAgent = undefined
 
 export const defaultConfig: HLTVConfig = {
   hltvUrl: 'https://www.hltv.org',

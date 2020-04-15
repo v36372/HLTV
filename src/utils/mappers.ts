@@ -6,15 +6,14 @@ import { Player } from '../models/Player'
 import { Outcome, WeakRoundOutcome } from '../models/RoundOutcome'
 import { MapSlug } from '../enums/MapSlug'
 import { popSlashSource } from '../utils/parsing'
-import { Agent as HttpsAgent } from 'https'
-import { Agent as HttpAgent } from 'http'
+import { HttpsProxyAgent } from 'https-proxy-agent'
 
-export const defaultLoadPage = (httpAgent: HttpsAgent | HttpAgent | undefined) => (url: string) =>
+export const defaultLoadPage = (httpAgent: HttpsProxyAgent | undefined) => (url: string) =>
   new Promise<string>((resolve, reject) => {
-    request.get(url, { gzip: true, agent: httpAgent }, (_, resp, body) => {
-      console.log(resp.statusCode)
-      if (resp.statusCode == 429) reject([resp.statusCode, url])
-      else resolve(body)
+    request.get(url, { gzip: true, agent: httpAgent }, (err, resp, body) => {
+      if (err !== null) reject(err)
+      if (resp && resp.statusCode == 429) reject([resp.statusCode, url])
+      resolve(body)
     })
   })
 
