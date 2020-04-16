@@ -48,7 +48,7 @@ export const getMatch = (config: HLTVConfig) => async ({
     ? {
         name: teamEls.eq(0).text(),
         id: Number(popSlashSource(teamEls.first().prev())),
-        rank: Number($('div.teamRanking a').eq(0).text().split(":")[1].substr(-1)),
+        rank: Number($('div.teamRanking a').eq(0).text().split(":")[1].split("#")[1]),
       }
     : undefined
 
@@ -56,7 +56,7 @@ export const getMatch = (config: HLTVConfig) => async ({
     ? {
         name: teamEls.eq(1).text(),
         id: Number(popSlashSource(teamEls.last().prev())),
-        rank: Number($('div.teamRanking a').eq(1).text().split(":")[1].substr(-1)),
+        rank: Number($('div.teamRanking a').eq(1).text().split(":")[1].split("#")[1]),
       }
     : undefined
 
