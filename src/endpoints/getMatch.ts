@@ -1,4 +1,5 @@
 import { FullMatch } from '../models/FullMatch'
+import { PastSerie } from '../models/FullMatch'
 import { Event } from '../models/Event'
 import { MapResult } from '../models/MapResult'
 import { OddResult, CommunityOddResult } from '../models/OddResult'
@@ -48,7 +49,7 @@ export const getMatch = (config: HLTVConfig) => async ({
     ? {
         name: teamEls.eq(0).text(),
         id: Number(popSlashSource(teamEls.first().prev())),
-        rank: Number($('div.teamRanking a').eq(0).text().split(":")[1].split("#")[1]),
+        rank: Number($('div.teamRanking a').eq(0).text().split(':')[1].split('#')[1]),
       }
     : undefined
 
@@ -56,7 +57,7 @@ export const getMatch = (config: HLTVConfig) => async ({
     ? {
         name: teamEls.eq(1).text(),
         id: Number(popSlashSource(teamEls.last().prev())),
-        rank: Number($('div.teamRanking a').eq(1).text().split(":")[1].split("#")[1]),
+        rank: Number($('div.teamRanking a').eq(1).text().split(':')[1].split('#')[1]),
       }
     : undefined
 
@@ -131,6 +132,18 @@ export const getMatch = (config: HLTVConfig) => async ({
         : undefined,
     }
   })
+
+  let pastSeries: { team1: PastSerie[]; team2: PastSerie[] } | undefined
+  pastSeries = {
+    team1: toArray($('table.table.matches').eq(0).find('tr')).map((el) => {
+      var p: PastSerie = { id: Number(el.find('td a').eq(0).attr('href')!.split('/')[2]) }
+      return p
+    }),
+    team2: toArray($('table.table.matches').eq(1).find('tr')).map((el) => {
+      var p: PastSerie = { id: Number(el.find('td a').eq(0).attr('href')!.split('/')[2]) }
+      return p
+    }),
+  }
 
   let players: { team1: Player[]; team2: Player[] } | undefined
 
@@ -265,5 +278,6 @@ export const getMatch = (config: HLTVConfig) => async ({
     demos,
     odds,
     oddsCommunity,
+    pastSeries,
   }
 }

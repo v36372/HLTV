@@ -10,6 +10,10 @@ import { Veto } from './Veto'
 import { Highlight } from './Highlight'
 import { OddResult, CommunityOddResult } from './OddResult'
 
+export interface PastSerie {
+  readonly id: number
+}
+
 export interface FullMatch {
   readonly id: number
   readonly statsId?: number
@@ -37,4 +41,8 @@ export interface FullMatch {
   readonly highlights?: Highlight[]
   readonly odds?: OddResult[]
   readonly oddsCommunity?: CommunityOddResult
+  readonly pastSeries?: {
+    team1: PastSerie[]
+    team2: PastSerie[]
+  }
 }
