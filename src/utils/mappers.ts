@@ -15,9 +15,6 @@ export const defaultLoadPage = (httpAgent: HttpsProxyAgent | undefined) => (url:
         httpsAgent: httpAgent,
       })
       .then(function (resp) {
-        console.log(resp.status, resp.statusText)
-        console.log(resp.data.length)
-        reject([429, url])
         resolve(resp.data)
       })
       .catch(function (err) {
