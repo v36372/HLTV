@@ -13,7 +13,7 @@ export const getTeamExtraStats = (config: HLTVConfig) => async ({
   startDate?: string
   endDate?: string
   rankingFilter?: RankingFilter
-}): Promise<TeamExtraStats[]> => {
+  }): Promise<{}> => {
   const query = stringify({
     startDate,
     endDate,
@@ -36,7 +36,7 @@ export const getTeamExtraStats = (config: HLTVConfig) => async ({
     config.loadPage
   )
 
-  let teamsExtraStats: TeamExtraStats[] = []
+  let teamsExtraStats = {}
   var create_ftu_hash = function (f) {
     var ftu_hash = {}
     toArray(f('.stats-table tbody tr')).forEach((rowEl) => {
@@ -98,13 +98,14 @@ export const getTeamExtraStats = (config: HLTVConfig) => async ({
   for (var id in ftu_hash_ct) {
     if (pistol_hash_ct[id] !== null) {
       const team: Team = { id: Number(id), name: ftu_hash_ct[id].name }
-      teamsExtraStats.push({
+      var newTeam : TeamExtraStats ={
         team: team,
         ftu_ct: ftu_hash_ct[id],
         ftu_t: ftu_hash_t[id],
         pistol_ct: pistol_hash_ct[id],
         pistol_t: pistol_hash_t[id],
-      })
+      }
+ 		teamsExtraStats[Number(team.id)] = newTeam
     }
   }
   return teamsExtraStats
