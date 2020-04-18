@@ -25,8 +25,8 @@ export interface IndividualStats {
 export interface ClutchesStats {
   readonly w_1on1: number
   readonly l_1on1: number
-  readonly w_1on2: number
-  readonly l_1on2: number
+  readonly w_1on2?: number
+  readonly l_1on2?: number
 }
 
 export interface FullPlayerStats {

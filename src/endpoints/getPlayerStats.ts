@@ -36,10 +36,12 @@ export const getPlayerStats = (config: HLTVConfig) => async ({
     `${config.hltvUrl}/stats/players/clutches/${id}/1on1/-?${query}`,
     config.loadPage
   )
+  /*
   const c_2$ = await fetchPage(
     `${config.hltvUrl}/stats/players/individual/${id}/1on2/-?${query}`,
     config.loadPage
   )
+  */
 
   const name = $('.summaryRealname div').text() || undefined
   const ign = $('.context-item-name').text()
@@ -83,35 +85,35 @@ export const getPlayerStats = (config: HLTVConfig) => async ({
     rating: getStats(13),
   }
 
-  var col_1 = i$('.col.stats-rows').eq(0)
-  var col_2 = i$('.col.stats-rows').eq(1)
+  const getIStats = (i: number, j: number) =>
+    i$('.col.stats-rows').eq(i).find('.stats-row').eq(j).find('span').eq(1).text()
 
   const individualStats: IndividualStats = {
-    totalOpeningKills: Number(col_1.find('.stats-row').eq(6).find('span').text()),
-    totalOpeningDeaths: Number(col_1.find('.stats-row').eq(7).find('span').text()),
-    openingKillRatio: Number(col_1.find('.stats-row').eq(8).find('span').text()),
-    openingKillRating: Number(col_1.find('.stats-row').eq(9).find('span').text()),
-    p_teamWinAfterFirstKill: col_1.find('.stats-row').eq(10).find('span').text(),
-    p_firstKillInWonRounds: col_1.find('.stats-row').eq(11).find('span').text(),
-    r_0_kill: Number(col_2.find('.stats-row').eq(0).find('span').text()),
-    r_1_kill: Number(col_2.find('.stats-row').eq(1).find('span').text()),
-    r_2_kill: Number(col_2.find('.stats-row').eq(2).find('span').text()),
-    r_3_kill: Number(col_2.find('.stats-row').eq(3).find('span').text()),
-    r_4_kill: Number(col_2.find('.stats-row').eq(4).find('span').text()),
-    r_5_kill: Number(col_2.find('.stats-row').eq(5).find('span').text()),
-    rifle_kill: Number(col_2.find('.stats-row').eq(6).find('span').text()),
-    sniper_kill: Number(col_2.find('.stats-row').eq(7).find('span').text()),
-    smg_kill: Number(col_2.find('.stats-row').eq(8).find('span').text()),
-    pistol_kill: Number(col_2.find('.stats-row').eq(9).find('span').text()),
-    grenade_kill: Number(col_2.find('.stats-row').eq(10).find('span').text()),
-    other_kill: Number(col_2.find('.stats-row').eq(11).find('span').text()),
+    totalOpeningKills: Number(getIStats(0, 6)),
+    totalOpeningDeaths: Number(getIStats(0, 7)),
+    openingKillRatio: Number(getIStats(0, 8)),
+    openingKillRating: Number(getIStats(0, 9)),
+    p_teamWinAfterFirstKill: getIStats(0, 10),
+    p_firstKillInWonRounds: getIStats(0, 11),
+    r_0_kill: Number(getIStats(1, 0)),
+    r_1_kill: Number(getIStats(1, 1)),
+    r_2_kill: Number(getIStats(1, 2)),
+    r_3_kill: Number(getIStats(1, 3)),
+    r_4_kill: Number(getIStats(1, 4)),
+    r_5_kill: Number(getIStats(1, 5)),
+    rifle_kill: Number(getIStats(1, 6)),
+    sniper_kill: Number(getIStats(1, 7)),
+    smg_kill: Number(getIStats(1, 8)),
+    pistol_kill: Number(getIStats(1, 9)),
+    grenade_kill: Number(getIStats(1, 10)),
+    other_kill: Number(getIStats(1, 11)),
   }
 
   const clutchesStats: ClutchesStats = {
     w_1on1: Number(c_1$('.summary-box.standard-box .value').eq(0).text()),
     l_1on1: Number(c_1$('.summary-box.standard-box .value').eq(1).text()),
-    w_1on2: Number(c_2$('.summary-box.standard-box .value').eq(0).text()),
-    l_1on2: Number(c_2$('.summary-box.standard-box .value').eq(1).text()),
+    // w_1on2: Number(c_2$('.summary-box.standard-box .value').eq(0).text()),
+    // l_1on2: Number(c_2$('.summary-box.standard-box .value').eq(1).text()),
   }
 
   return { name, ign, image, age, country, team, statistics, individualStats, clutchesStats }
