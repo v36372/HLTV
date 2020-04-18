@@ -28,7 +28,6 @@ import { EventSize } from './enums/EventSize'
 import { WinType } from './enums/WinType'
 import { getEvents } from './endpoints/getEvents'
 import { defaultLoadPage } from './utils/mappers'
-import { HttpsProxyAgent } from 'https-proxy-agent'
 
 export class HLTVFactory {
   constructor(private readonly config: HLTVConfig) {
@@ -39,7 +38,7 @@ export class HLTVFactory {
       config.hltvUrl = defaultConfig.hltvUrl
     }
     if (config.httpAgent && !config.loadPage) {
-      config.loadPage = defaultLoadPage(config.httpAgent)
+      config.loadPage = defaultLoadPage({})
     }
     if (!config.httpAgent) {
       config.httpAgent = defaultConfig.httpAgent
@@ -73,9 +72,8 @@ export class HLTVFactory {
     return new HLTVFactory(config)
   }
 
-  public changeAgent(newAgent: HttpsProxyAgent) {
-    this.config.httpAgent = newAgent
-    this.config.loadPage = defaultLoadPage(this.config.httpAgent)
+  public changeProxySettings(newProxySettings) {
+    this.config.loadPage = defaultLoadPage(newProxySettings)
   }
 }
 

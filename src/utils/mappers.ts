@@ -1,26 +1,23 @@
 import * as cheerio from 'cheerio'
+import * as request from 'request'
 import { Team } from '../models/Team'
 import { Veto } from '../models/Veto'
 import { Player } from '../models/Player'
 import { Outcome, WeakRoundOutcome } from '../models/RoundOutcome'
 import { MapSlug } from '../enums/MapSlug'
 import { popSlashSource } from '../utils/parsing'
-import { HttpsProxyAgent } from 'https-proxy-agent'
-const axios = require('axios')
+const HttpsProxyAgent = require('https-proxy-agent')
 
-export const defaultLoadPage = (httpAgent: HttpsProxyAgent | undefined) => (url: string) =>
+export const defaultLoadPage = (proxySettings) => (url: string) =>
   new Promise<string>((resolve, reject) => {
-    axios
-      .get(url, {
-        httpsAgent: httpAgent,
-      })
-      .then(function (resp) {
-        resolve(resp.data)
-      })
-      .catch(function (err) {
-        console.error(err)
-        reject([err.response.status, url])
-      })
+    var httpAgent = undefined
+    if (proxySettings.host && proxySettings.port)
+      httpAgent = new HttpsProxyAgent('http://' + proxySettings.host + ':' + proxySettings.port)
+    request.get(url, { gzip: true, agent: httpAgent }, (err, resp, body) => {
+      if (err !== null) reject(err)
+      if (resp && resp.statusCode == 429) reject([resp.statusCode, url])
+      resolve(body)
+    })
   })
 
 export const fetchPage = async (

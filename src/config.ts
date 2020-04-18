@@ -14,5 +14,5 @@ export const defaultConfig: HLTVConfig = {
   hltvUrl: 'https://www.hltv.org',
   hltvStaticUrl: 'https://static.hltv.org',
   httpAgent: defaultAgent,
-  loadPage: defaultLoadPage(defaultAgent),
+  loadPage: defaultLoadPage({}),
 }
