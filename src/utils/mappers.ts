@@ -6,21 +6,24 @@ import { Outcome, WeakRoundOutcome } from '../models/RoundOutcome'
 import { MapSlug } from '../enums/MapSlug'
 import { popSlashSource } from '../utils/parsing'
 import { HttpsProxyAgent } from 'https-proxy-agent'
-const axios = require('axios');
+const axios = require('axios')
 
 export const defaultLoadPage = (httpAgent: HttpsProxyAgent | undefined) => (url: string) =>
   new Promise<string>((resolve, reject) => {
-	  axios.get(url, {
-	   httpsAgent: httpAgent,
-	  }).then(function(resp){
-		  console.log(resp.status, resp.statusText)
-		  console.log(resp.data.length)
-		  reject([429, url])
-		  resolve(resp.data)
-		  }).catch(function(err){
-		  	console.error(err)
-		  	reject([err.response.status, url])
-		  })
+    axios
+      .get(url, {
+        httpsAgent: httpAgent,
+      })
+      .then(function (resp) {
+        console.log(resp.status, resp.statusText)
+        console.log(resp.data.length)
+        reject([429, url])
+        resolve(resp.data)
+      })
+      .catch(function (err) {
+        console.error(err)
+        reject([err.response.status, url])
+      })
   })
 
 export const fetchPage = async (

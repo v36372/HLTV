@@ -13,7 +13,7 @@ export const getTeamExtraStats = (config: HLTVConfig) => async ({
   startDate?: string
   endDate?: string
   rankingFilter?: RankingFilter
-  }): Promise<{}> => {
+}): Promise<{}> => {
   const query = stringify({
     startDate,
     endDate,
@@ -98,14 +98,14 @@ export const getTeamExtraStats = (config: HLTVConfig) => async ({
   for (var id in ftu_hash_ct) {
     if (pistol_hash_ct[id] !== null) {
       const team: Team = { id: Number(id), name: ftu_hash_ct[id].name }
-      var newTeam : TeamExtraStats ={
+      var newTeam: TeamExtraStats = {
         team: team,
         ftu_ct: ftu_hash_ct[id],
         ftu_t: ftu_hash_t[id],
         pistol_ct: pistol_hash_ct[id],
         pistol_t: pistol_hash_t[id],
       }
- 		teamsExtraStats[Number(team.id)] = newTeam
+      teamsExtraStats[Number(team.id)] = newTeam
     }
   }
   return teamsExtraStats
