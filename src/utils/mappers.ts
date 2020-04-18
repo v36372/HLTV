@@ -1,5 +1,4 @@
 import * as cheerio from 'cheerio'
-import * as request from 'request'
 import { Team } from '../models/Team'
 import { Veto } from '../models/Veto'
 import { Player } from '../models/Player'
@@ -7,14 +6,21 @@ import { Outcome, WeakRoundOutcome } from '../models/RoundOutcome'
 import { MapSlug } from '../enums/MapSlug'
 import { popSlashSource } from '../utils/parsing'
 import { HttpsProxyAgent } from 'https-proxy-agent'
+const axios = require('axios');
 
 export const defaultLoadPage = (httpAgent: HttpsProxyAgent | undefined) => (url: string) =>
   new Promise<string>((resolve, reject) => {
-    request.get(url, { gzip: true, agent: httpAgent }, (err, resp, body) => {
-      if (err !== null) reject(err)
-      if (resp && resp.statusCode == 429) reject([resp.statusCode, url])
-      resolve(body)
-    })
+	  axios.get(url, {
+	   httpsAgent: httpAgent,
+	  }).then(function(resp){
+		  console.log(resp.status, resp.statusText)
+		  console.log(resp.data.length)
+		  reject([429, url])
+		  resolve(resp.data)
+		  }).catch(function(err){
+		  	console.error(err)
+		  	reject([err.response.status, url])
+		  })
   })
 
 export const fetchPage = async (
