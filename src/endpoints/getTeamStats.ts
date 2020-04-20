@@ -21,11 +21,14 @@ export const getTeamStats = (config: HLTVConfig) => async ({
     rankingFilter,
   })
   const $ = await fetchPage(`${config.hltvUrl}/stats/teams/${id}/-?${query}`, config.loadPage)
-  // const m$ = await fetchPage(`${config.hltvUrl}/stats/teams/matches/${id}/-?${query}`, config.loadPage)
+  /*
+  const m$ = await fetchPage(`${config.hltvUrl}/stats/teams/matches/${id}/-?${query}`, config.loadPage)
   const e$ = await fetchPage(
     `${config.hltvUrl}/stats/teams/events/${id}/-?${query}`,
     config.loadPage
   )
+  */
+
   const mp$ = await fetchPage(
     `${config.hltvUrl}/stats/teams/maps/${id}/-?${query}`,
     config.loadPage
@@ -93,6 +96,7 @@ export const getTeamStats = (config: HLTVConfig) => async ({
   // result: matchEl.find('.statsDetail').text()
   // }))
 
+  /*
   const events = toArray(e$('.stats-table tbody tr')).map((eventEl) => ({
     place: eventEl.find('.statsCenterText').text(),
     event: {
@@ -100,11 +104,13 @@ export const getTeamStats = (config: HLTVConfig) => async ({
       name: eventEl.find('.image-and-label').first().attr('title')!,
     },
   }))
+  */
 
-  const getMapStat = (mapEl, i) => mapEl.find('.stats-row').eq(i).children().last().text()
+  const getMapStat = (mapEl, i) =>
+    mapEl.find('.stats-rows .stats-row').eq(i).children().last().text()
 
-  const mapStats = toArray(mp$('.two-grid .col .stats-rows')).reduce((stats, mapEl) => {
-    const mapName = getMapSlug(mapEl.prev().find('.map-pool-map-name').text())
+  const mapStats = toArray(mp$('.two-grid .col')).reduce((stats, mapEl) => {
+    const mapName = getMapSlug(mapEl.find('.map-pool-map-name').text())
 
     stats[mapName] = {
       wins: Number(getMapStat(mapEl, 0).split(' / ')[0]),
@@ -114,10 +120,20 @@ export const getTeamStats = (config: HLTVConfig) => async ({
       totalRounds: Number(getMapStat(mapEl, 2)),
       roundWinPAfterFirstKill: Number(getMapStat(mapEl, 3).split('%')[0]),
       roundWinPAfterFirstDeath: Number(getMapStat(mapEl, 4).split('%')[0]),
+      biggest_win: mapEl
+        .find('.two-grid.win-defeat-container .col a')
+        .eq(0)
+        .attr('href')!
+        .split('/')[4],
+      biggest_lost: mapEl
+        .find('.two-grid.win-defeat-container .col a')
+        .eq(1)
+        .attr('href')!
+        .split('/')[4],
     }
 
     return stats
   }, {})
 
-  return { overview, currentLineup, historicPlayers, standins, events, mapStats }
+  return { overview, currentLineup, historicPlayers, standins, mapStats }
 }

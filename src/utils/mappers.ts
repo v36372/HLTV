@@ -15,7 +15,7 @@ export const defaultLoadPage = (proxySettings) => (url: string) =>
       httpAgent = new HttpsProxyAgent('http://' + proxySettings.host + ':' + proxySettings.port)
     request.get(url, { gzip: true, agent: httpAgent }, (err, resp, body) => {
       if (err !== null) reject(err)
-      if (resp && resp.statusCode == 429) reject([resp.statusCode, url])
+      if (resp && resp.statusCode != 200) reject([resp.statusCode, url])
       resolve(body)
     })
   })

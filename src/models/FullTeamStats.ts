@@ -20,6 +20,8 @@ export interface TeamMapStats {
   totalRounds: number
   roundWinPAfterFirstKill: number
   roundWinPAfterFirstDeath: number
+  biggest_win?: string
+  biggest_lost?: string
 }
 
 export interface TeamStatsEvent {
@@ -43,5 +45,5 @@ export interface FullTeamStats {
   standins: Player[]
   // matches: TeamStatsMatch[]
   mapStats: { [key: string]: TeamMapStats }
-  events: TeamStatsEvent[]
+  //events: TeamStatsEvent[]
 }
