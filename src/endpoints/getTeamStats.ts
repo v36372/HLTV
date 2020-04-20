@@ -118,13 +118,15 @@ export const getTeamStats = (proxy: string) => async ({
       roundWinPAfterFirstKill: Number(getMapStat(mapEl, 3).split('%')[0]),
       roundWinPAfterFirstDeath: Number(getMapStat(mapEl, 4).split('%')[0]),
       biggest_win: mapEl
-        .find('.two-grid.win-defeat-container .col a')
+        .find('.two-grid.win-defeat-container .col')
         .eq(0)
+        .find('a')
         .attr('href')!
         .split('/')[4],
       biggest_lost: mapEl
-        .find('.two-grid.win-defeat-container .col a')
+        .find('.two-grid.win-defeat-container .col')
         .eq(1)
+        .find('a')
         .attr('href')!
         .split('/')[4],
     }
