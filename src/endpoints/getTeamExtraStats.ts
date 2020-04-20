@@ -1,11 +1,11 @@
 import { TeamExtraStats, TeamFTUStats, TeamPistolStats } from '../models/TeamExtraStats'
 import { Team } from '../models/Team'
-import { HLTVConfig } from '../config'
 import { fetchPage, toArray } from '../utils/mappers'
 import { RankingFilter } from '../enums/RankingFilter'
+import { defaultConfig as config } from '../config'
 import { stringify } from 'querystring'
 
-export const getTeamExtraStats = (config: HLTVConfig) => async ({
+export const getTeamExtraStats = (proxy: string) => async ({
   startDate,
   endDate,
   rankingFilter,
@@ -21,19 +21,16 @@ export const getTeamExtraStats = (config: HLTVConfig) => async ({
   })
   const f_ct$ = await fetchPage(
     `${config.hltvUrl}/stats/teams/ftu?${query}&side=COUNTER_TERRORIST`,
-    config.loadPage
+    proxy
   )
   const p_ct$ = await fetchPage(
     `${config.hltvUrl}/stats/teams/pistols?${query}&side=COUNTER_TERRORIST`,
-    config.loadPage
+    proxy
   )
-  const f_t$ = await fetchPage(
-    `${config.hltvUrl}/stats/teams/ftu?${query}&side=TERRORIST`,
-    config.loadPage
-  )
+  const f_t$ = await fetchPage(`${config.hltvUrl}/stats/teams/ftu?${query}&side=TERRORIST`, proxy)
   const p_t$ = await fetchPage(
     `${config.hltvUrl}/stats/teams/pistols?${query}&side=TERRORIST`,
-    config.loadPage
+    proxy
   )
 
   let teamsExtraStats = {}

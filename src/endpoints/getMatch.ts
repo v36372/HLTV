@@ -13,7 +13,6 @@ import { HeadToHeadResult } from '../models/HeadToHeadResult'
 import { MapSlug } from '../enums/MapSlug'
 import { MatchStatus } from '../enums/MatchStatus'
 import { popSlashSource, hasChild, hasNoChild, percentageToDecimalOdd } from '../utils/parsing'
-import { HLTVConfig } from '../config'
 import {
   fetchPage,
   toArray,
@@ -21,13 +20,10 @@ import {
   getMapSlug,
   getMatchPlayer,
 } from '../utils/mappers'
+import { defaultConfig as config } from '../config'
 
-export const getMatch = (config: HLTVConfig) => async ({
-  id,
-}: {
-  id: number
-}): Promise<FullMatch> => {
-  const $ = await fetchPage(`${config.hltvUrl}/matches/${id}/-`, config.loadPage)
+export const getMatch = (proxy: string) => async ({ id }: { id: number }): Promise<FullMatch> => {
+  const $ = await fetchPage(`${config.hltvUrl}/matches/${id}/-`, proxy)
 
   const title = $('.timeAndEvent .text').text().trim() || undefined
   const date = Number($('.timeAndEvent .date').attr('data-unix'))

@@ -1,14 +1,10 @@
 import { FullEvent } from '../models/FullEvent'
-import { HLTVConfig } from '../config'
 import { fetchPage, toArray, getMapSlug } from '../utils/mappers'
 import { popSlashSource } from '../utils/parsing'
+import { defaultConfig as config } from '../config'
 
-export const getEvent = (config: HLTVConfig) => async ({
-  id,
-}: {
-  id: number
-}): Promise<FullEvent> => {
-  const $ = await fetchPage(`${config.hltvUrl}/events/${id}/-`, config.loadPage)
+export const getEvent = (proxy: string) => async ({ id }: { id: number }): Promise<FullEvent> => {
+  const $ = await fetchPage(`${config.hltvUrl}/events/${id}/-`, proxy)
 
   const name = $('.eventname').text()
   const dateStart = Number($('td.eventdate span[data-unix]').first().attr('data-unix')) || undefined

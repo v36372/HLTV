@@ -2,7 +2,7 @@ import * as io from 'socket.io-client'
 import { ScoreboardUpdate } from '../models/ScoreboardUpdate'
 import { LogUpdate } from '../models/LogUpdate'
 import { fetchPage } from '../utils/mappers'
-import { HLTVConfig } from '../config'
+import { defaultConfig as config } from '../config'
 
 export type ConnectToScorebotParams = {
   id: number
@@ -13,7 +13,7 @@ export type ConnectToScorebotParams = {
   onDisconnect?: () => any
 }
 
-export const connectToScorebot = (config: HLTVConfig) => ({
+export const connectToScorebot = (proxy: string) => ({
   id,
   onScoreboardUpdate,
   onLogUpdate,
@@ -21,7 +21,7 @@ export const connectToScorebot = (config: HLTVConfig) => ({
   onConnect,
   onDisconnect,
 }: ConnectToScorebotParams) => {
-  fetchPage(`${config.hltvUrl}/matches/${id}/-`, config.loadPage).then(($) => {
+  fetchPage(`${config.hltvUrl}/matches/${id}/-`, proxy).then(($) => {
     const url = $('#scoreboardElement').attr('data-scorebot-url')!.split(',').pop()!
     const matchId = $('#scoreboardElement').attr('data-scorebot-id')
 

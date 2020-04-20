@@ -3,15 +3,15 @@ import { Event } from '../models/Event'
 import { Team } from '../models/Team'
 import { MapSlug } from '../enums/MapSlug'
 import { popSlashSource } from '../utils/parsing'
-import { HLTVConfig } from '../config'
 import { fetchPage, toArray, getMatchFormatAndMap } from '../utils/mappers'
 import { ContentFilter } from '../enums/ContentFilter'
+import { defaultConfig as config } from '../config'
 
 type GetResultsArguments =
   | { pages?: number; teamID?: number; eventID?: never; contentFilters?: ContentFilter[] }
   | { pages?: never; teamID?: number; eventID?: number; contentFilters?: ContentFilter[] }
 
-export const getResults = (config: HLTVConfig) => async ({
+export const getResults = (proxy: string) => async ({
   pages = 1,
   teamID,
   eventID,
@@ -33,7 +33,7 @@ export const getResults = (config: HLTVConfig) => async ({
       url += `&content=${filter}`
     }
 
-    const $ = await fetchPage(url, config.loadPage)
+    const $ = await fetchPage(url, proxy)
 
     matches = matches.concat(
       toArray($('.results-holder > .results-all > .results-sublist .result-con .a-reset')).map(

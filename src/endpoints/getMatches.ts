@@ -4,13 +4,11 @@ import { Event } from '../models/Event'
 import { Team } from '../models/Team'
 import { MapSlug } from '../enums/MapSlug'
 import { popSlashSource, text } from '../utils/parsing'
-import { HLTVConfig } from '../config'
 import { fetchPage, toArray, getMatchFormatAndMap } from '../utils/mappers'
+import { defaultConfig as config } from '../config'
 
-export const getMatches = (config: HLTVConfig) => async (): Promise<
-  (UpcomingMatch | LiveMatch)[]
-> => {
-  const $ = await fetchPage(`${config.hltvUrl}/matches`, config.loadPage)
+export const getMatches = (proxy: string) => async (): Promise<(UpcomingMatch | LiveMatch)[]> => {
+  const $ = await fetchPage(`${config.hltvUrl}/matches`, proxy)
 
   const liveMatches: LiveMatch[] = toArray($('.live-match .a-reset')).map((matchEl) => {
     const id = Number(matchEl.attr('href')!.split('/')[2])

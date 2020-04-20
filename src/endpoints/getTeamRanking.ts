@@ -1,25 +1,22 @@
 import { TeamRanking } from '../models/TeamRanking'
 import { Team } from '../models/Team'
-import { HLTVConfig } from '../config'
 import { fetchPage, toArray } from '../utils/mappers'
 import { popSlashSource } from '../utils/parsing'
+import { defaultConfig as config } from '../config'
 
-export const getTeamRanking = (config: HLTVConfig) => async ({
+export const getTeamRanking = (proxy: string) => async ({
   year = '',
   month = '',
   day = '',
   country = '',
 } = {}): Promise<TeamRanking[]> => {
-  let $ = await fetchPage(
-    `${config.hltvUrl}/ranking/teams/${year}/${month}/${day}`,
-    config.loadPage
-  )
+  let $ = await fetchPage(`${config.hltvUrl}/ranking/teams/${year}/${month}/${day}`, proxy)
 
   if ((!year || !month || !day) && country) {
     const redirectedLink = $('.ranking-country > a').first().attr('href')!
     const countryRankingLink = redirectedLink.split('/').slice(0, -1).concat([country]).join('/')
 
-    $ = await fetchPage(`${config.hltvUrl}${countryRankingLink}`, config.loadPage)
+    $ = await fetchPage(`${config.hltvUrl}${countryRankingLink}`, proxy)
   }
 
   const teams = toArray($('.ranked-team')).map((teamEl) => {

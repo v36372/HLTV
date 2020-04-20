@@ -11,12 +11,12 @@ import {
 import { RoundOutcome, WeakRoundOutcome } from '../models/RoundOutcome'
 import { Event } from '../models/Event'
 import { popSlashSource } from '../utils/parsing'
-import { HLTVConfig } from '../config'
 import { fetchPage, toArray, getMapSlug, mapRoundElementToModel } from '../utils/mappers'
+import { defaultConfig as config } from '../config'
 
 export type PlayerPerformanceStatsMap = { [key: number]: PlayerPerformanceStats }
 
-export const getMatchMapStats = (config: HLTVConfig) => async ({
+export const getMatchMapStats = (proxy: string) => async ({
   id,
 }: {
   id: number
@@ -49,8 +49,8 @@ export const getMatchMapStats = (config: HLTVConfig) => async ({
   }
 
   const [m$, p$] = await Promise.all([
-    fetchPage(`${config.hltvUrl}/stats/matches/mapstatsid/${id}/-`, config.loadPage),
-    fetchPage(`${config.hltvUrl}/stats/matches/performance/mapstatsid/${id}/-`, config.loadPage),
+    fetchPage(`${config.hltvUrl}/stats/matches/mapstatsid/${id}/-`, proxy),
+    fetchPage(`${config.hltvUrl}/stats/matches/performance/mapstatsid/${id}/-`, proxy),
   ])
 
   const matchPageID = Number(m$('.match-page-link').attr('href')!.split('/')[2])

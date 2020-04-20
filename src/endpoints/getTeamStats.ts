@@ -1,10 +1,10 @@
 import { FullTeamStats } from '../models/FullTeamStats'
-import { HLTVConfig } from '../config'
 import { fetchPage, toArray, getMapSlug } from '../utils/mappers'
 import { RankingFilter } from '../enums/RankingFilter'
 import { stringify } from 'querystring'
+import { defaultConfig as config } from '../config'
 
-export const getTeamStats = (config: HLTVConfig) => async ({
+export const getTeamStats = (proxy: string) => async ({
   id,
   startDate,
   endDate,
@@ -20,7 +20,7 @@ export const getTeamStats = (config: HLTVConfig) => async ({
     endDate,
     rankingFilter,
   })
-  const $ = await fetchPage(`${config.hltvUrl}/stats/teams/${id}/-?${query}`, config.loadPage)
+  const $ = await fetchPage(`${config.hltvUrl}/stats/teams/${id}/-?${query}`, proxy)
   /*
   const m$ = await fetchPage(`${config.hltvUrl}/stats/teams/matches/${id}/-?${query}`, config.loadPage)
   const e$ = await fetchPage(
@@ -29,10 +29,7 @@ export const getTeamStats = (config: HLTVConfig) => async ({
   )
   */
 
-  const mp$ = await fetchPage(
-    `${config.hltvUrl}/stats/teams/maps/${id}/-?${query}`,
-    config.loadPage
-  )
+  const mp$ = await fetchPage(`${config.hltvUrl}/stats/teams/maps/${id}/-?${query}`, proxy)
 
   const overviewStats = $('.standard-box .large-strong')
   const getOverviewStatByIndex = (i) => Number(overviewStats.eq(i).text())

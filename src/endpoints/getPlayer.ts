@@ -1,15 +1,11 @@
 import { FullPlayer } from '../models/FullPlayer'
 import { Team } from '../models/Team'
-import { HLTVConfig } from '../config'
 import { fetchPage, toArray } from '../utils/mappers'
 import { popSlashSource } from '../utils/parsing'
+import { defaultConfig as config } from '../config'
 
-export const getPlayer = (config: HLTVConfig) => async ({
-  id,
-}: {
-  id: number
-}): Promise<FullPlayer> => {
-  const $ = await fetchPage(`${config.hltvUrl}/player/${id}/-`, config.loadPage)
+export const getPlayer = (proxy: string) => async ({ id }: { id: number }): Promise<FullPlayer> => {
+  const $ = await fetchPage(`${config.hltvUrl}/player/${id}/-`, proxy)
 
   const isStandardPlayer = $('.standard-box.profileTopBox').length !== 0
 

@@ -2,10 +2,10 @@ import { stringify } from 'querystring'
 import { PlayerRanking } from '../models/PlayerRanking'
 import { MatchType } from '../enums/MatchType'
 import { RankingFilter } from '../enums/RankingFilter'
-import { HLTVConfig } from '../config'
 import { fetchPage, toArray } from '../utils/mappers'
+import { defaultConfig as config } from '../config'
 
-export const getPlayerRanking = (config: HLTVConfig) => async ({
+export const getPlayerRanking = (proxy: string) => async ({
   startDate,
   endDate,
   matchType,
@@ -23,7 +23,7 @@ export const getPlayerRanking = (config: HLTVConfig) => async ({
     rankingFilter,
   })
 
-  const $ = await fetchPage(`${config.hltvUrl}/stats/players?${query}`, config.loadPage)
+  const $ = await fetchPage(`${config.hltvUrl}/stats/players?${query}`, proxy)
 
   const players = toArray($('.player-ratings-table tbody tr')).map((matchEl) => {
     var id = Number(matchEl.find('.playerCol a').first().attr('href')!.split('/')[3])

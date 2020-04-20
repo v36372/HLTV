@@ -1,4 +1,3 @@
-import { defaultConfig, HLTVConfig } from './config'
 import { connectToScorebot } from './endpoints/connectToScorebot'
 import { getMatch } from './endpoints/getMatch'
 import { getMatches } from './endpoints/getMatches'
@@ -13,7 +12,6 @@ import { getTeam } from './endpoints/getTeam'
 import { getTeamStats } from './endpoints/getTeamStats'
 import { getTeamExtraStats } from './endpoints/getTeamExtraStats'
 import { getPlayer } from './endpoints/getPlayer'
-import { getPlayerByName } from './endpoints/getPlayerByName'
 import { getEvent } from './endpoints/getEvent'
 import { getPlayerStats } from './endpoints/getPlayerStats'
 import { getPlayerRanking } from './endpoints/getPlayerRanking'
@@ -27,57 +25,35 @@ import { ContentFilter } from './enums/ContentFilter'
 import { EventSize } from './enums/EventSize'
 import { WinType } from './enums/WinType'
 import { getEvents } from './endpoints/getEvents'
-import { defaultLoadPage } from './utils/mappers'
 
 export class HLTVFactory {
-  constructor(private readonly config: HLTVConfig) {
-    if (!config.hltvStaticUrl) {
-      config.hltvStaticUrl = defaultConfig.hltvStaticUrl
-    }
-    if (!config.hltvUrl) {
-      config.hltvUrl = defaultConfig.hltvUrl
-    }
-    if (config.httpAgent && !config.loadPage) {
-      config.loadPage = defaultLoadPage({})
-    }
-    if (!config.httpAgent) {
-      config.httpAgent = defaultConfig.httpAgent
-    }
-    if (!config.loadPage) {
-      config.loadPage = defaultConfig.loadPage
-    }
-  }
+  constructor(private readonly proxy: string) {}
 
-  connectToScorebot = connectToScorebot(this.config)
-  getMatch = getMatch(this.config)
-  getMatches = getMatches(this.config)
-  getMatchesStats = getMatchesStats(this.config)
-  getMatchStats = getMatchStats(this.config)
-  getMatchMapStats = getMatchMapStats(this.config)
-  getRecentThreads = getRecentThreads(this.config)
-  getResults = getResults(this.config)
-  getStreams = getStreams(this.config)
-  getTeamRanking = getTeamRanking(this.config)
-  getTeam = getTeam(this.config)
-  getTeamStats = getTeamStats(this.config)
-  getTeamExtraStats = getTeamExtraStats(this.config)
-  getPlayer = getPlayer(this.config)
-  getPlayerByName = getPlayerByName(this.config)
-  getEvent = getEvent(this.config)
-  getEvents = getEvents(this.config)
-  getPlayerStats = getPlayerStats(this.config)
-  getPlayerRanking = getPlayerRanking(this.config)
+  connectToScorebot = connectToScorebot(this.proxy)
+  getMatch = getMatch(this.proxy)
+  getMatches = getMatches(this.proxy)
+  getMatchesStats = getMatchesStats(this.proxy)
+  getMatchStats = getMatchStats(this.proxy)
+  getMatchMapStats = getMatchMapStats(this.proxy)
+  getRecentThreads = getRecentThreads(this.proxy)
+  getResults = getResults(this.proxy)
+  getStreams = getStreams(this.proxy)
+  getTeamRanking = getTeamRanking(this.proxy)
+  getTeam = getTeam(this.proxy)
+  getTeamStats = getTeamStats(this.proxy)
+  getTeamExtraStats = getTeamExtraStats(this.proxy)
+  getPlayer = getPlayer(this.proxy)
+  getEvent = getEvent(this.proxy)
+  getEvents = getEvents(this.proxy)
+  getPlayerStats = getPlayerStats(this.proxy)
+  getPlayerRanking = getPlayerRanking(this.proxy)
 
-  public createInstance(config: HLTVConfig) {
-    return new HLTVFactory(config)
-  }
-
-  public changeProxySettings(newProxySettings) {
-    this.config.loadPage = defaultLoadPage(newProxySettings)
+  public createInstance(proxy) {
+    return new HLTVFactory(proxy)
   }
 }
 
-const hltvInstance = new HLTVFactory(defaultConfig)
+const hltvInstance = new HLTVFactory('')
 
 export default hltvInstance
 export {

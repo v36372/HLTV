@@ -1,19 +1,19 @@
-import { HLTVConfig } from '../config'
 import { fetchPage, toArray } from '../utils/mappers'
 import { EventResult } from '../models/EventResult'
 import { EventSize } from '../enums/EventSize'
 import { EventType } from '../enums/EventType'
 import { SimpleEvent } from '../models/SimpleEvent'
 import { popSlashSource } from '../utils/parsing'
+import { defaultConfig as config } from '../config'
 
-export const getEvents = (config: HLTVConfig) => async ({
+export const getEvents = (proxy: string) => async ({
   size,
   month,
 }: {
   size?: EventSize
   month?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11
 } = {}): Promise<EventResult[]> => {
-  const $ = await fetchPage(`${config.hltvUrl}/events`, config.loadPage)
+  const $ = await fetchPage(`${config.hltvUrl}/events`, proxy)
 
   const events = toArray($('.events-month'))
     .map((eventEl) => {

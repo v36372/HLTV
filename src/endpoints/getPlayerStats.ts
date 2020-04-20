@@ -1,13 +1,13 @@
 import { FullPlayerStats, IndividualStats, ClutchesStats } from '../models/FullPlayerStats'
 import { Team } from '../models/Team'
 import { stringify } from 'querystring'
-import { HLTVConfig } from '../config'
 import { MatchType } from '../enums/MatchType'
 import { RankingFilter } from '../enums/RankingFilter'
 import { fetchPage } from '../utils/mappers'
 import { popSlashSource } from '../utils/parsing'
+import { defaultConfig as config } from '../config'
 
-export const getPlayerStats = (config: HLTVConfig) => async ({
+export const getPlayerStats = (proxy: string) => async ({
   id,
   startDate,
   endDate,
@@ -27,19 +27,16 @@ export const getPlayerStats = (config: HLTVConfig) => async ({
     rankingFilter,
   })
 
-  const $ = await fetchPage(`${config.hltvUrl}/stats/players/${id}/-?${query}`, config.loadPage)
-  const i$ = await fetchPage(
-    `${config.hltvUrl}/stats/players/individual/${id}/-?${query}`,
-    config.loadPage
-  )
+  const $ = await fetchPage(`${config.hltvUrl}/stats/players/${id}/-?${query}`, proxy)
+  const i$ = await fetchPage(`${config.hltvUrl}/stats/players/individual/${id}/-?${query}`, proxy)
   const c_1$ = await fetchPage(
     `${config.hltvUrl}/stats/players/clutches/${id}/1on1/-?${query}`,
-    config.loadPage
+    proxy
   )
   /*
   const c_2$ = await fetchPage(
     `${config.hltvUrl}/stats/players/individual/${id}/1on2/-?${query}`,
-    config.loadPage
+	proxy
   )
   */
 

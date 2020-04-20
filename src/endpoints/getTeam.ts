@@ -1,15 +1,11 @@
 import { FullTeam, Result, Achievement } from '../models/FullTeam'
-import { HLTVConfig } from '../config'
 import { fetchPage, toArray } from '../utils/mappers'
 import { popSlashSource } from '../utils/parsing'
+import { defaultConfig as config } from '../config'
 
-export const getTeam = (config: HLTVConfig) => async ({
-  id,
-}: {
-  id: number
-}): Promise<FullTeam> => {
-  const t$ = await fetchPage(`${config.hltvUrl}/team/${id}/-`, config.loadPage)
-  const e$ = await fetchPage(`${config.hltvUrl}/stats/teams/events/${id}/-`, config.loadPage)
+export const getTeam = (proxy: string) => async ({ id }: { id: number }): Promise<FullTeam> => {
+  const t$ = await fetchPage(`${config.hltvUrl}/team/${id}/-`, proxy)
+  const e$ = await fetchPage(`${config.hltvUrl}/stats/teams/events/${id}/-`, proxy)
 
   const name = t$('.profile-team-name').text()
   const logo = `${config.hltvStaticUrl}/images/team/logo/${id}`

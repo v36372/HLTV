@@ -6,25 +6,28 @@ import { Player } from '../models/Player'
 import { Outcome, WeakRoundOutcome } from '../models/RoundOutcome'
 import { MapSlug } from '../enums/MapSlug'
 import { popSlashSource } from '../utils/parsing'
-const HttpsProxyAgent = require('https-proxy-agent')
+import * as createHttpsProxyAgent from 'https-proxy-agent'
 
-export const defaultLoadPage = (proxySettings) => (url: string) =>
+export const defaultLoadPage = (url, proxy) =>
   new Promise<string>((resolve, reject) => {
-    var httpAgent = undefined
-    if (proxySettings.host && proxySettings.port)
-      httpAgent = new HttpsProxyAgent('http://' + proxySettings.host + ':' + proxySettings.port)
-    request.get(url, { gzip: true, agent: httpAgent }, (err, resp, body) => {
+    var config = {
+      gzip: true,
+      timeout: 10000,
+      followRedirect: true,
+      maxRedirects: 10,
+    }
+    if (proxy !== '') {
+      config['agent'] = createHttpsProxyAgent(proxy)
+    }
+    request.get(url, config, (err, resp, body) => {
       if (err !== null) reject(err)
       if (resp && resp.statusCode != 200) reject([resp.statusCode, url])
       resolve(body)
     })
   })
 
-export const fetchPage = async (
-  url: string,
-  loadPage?: (url: string) => Promise<string>
-): Promise<CheerioStatic> => {
-  return cheerio.load(await loadPage!(url))
+export const fetchPage = async (url: string, proxy: string): Promise<CheerioStatic> => {
+  return cheerio.load(await defaultLoadPage(url, proxy))
 }
 
 export const toArray = (elements: Cheerio): Cheerio[] => elements.toArray().map(cheerio)

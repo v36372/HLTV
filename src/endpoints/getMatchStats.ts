@@ -8,10 +8,10 @@ import {
 } from '../models/FullMatchStats'
 import { Event } from '../models/Event'
 import { popSlashSource } from '../utils/parsing'
-import { HLTVConfig } from '../config'
 import { fetchPage, toArray } from '../utils/mappers'
+import { defaultConfig as config } from '../config'
 
-export const getMatchStats = (config: HLTVConfig) => async ({
+export const getMatchStats = (proxy: string) => async ({
   id,
 }: {
   id: number
@@ -37,7 +37,7 @@ export const getMatchStats = (config: HLTVConfig) => async ({
     }
   }
 
-  const m$ = await fetchPage(`${config.hltvUrl}/stats/matches/${id}/-`, config.loadPage)
+  const m$ = await fetchPage(`${config.hltvUrl}/stats/matches/${id}/-`, proxy)
 
   const matchPageID = Number(m$('.match-page-link').attr('href')!.split('/')[2])
   const matchScore = [Number(m$('.team-left .bold').text()), Number(m$('.team-right .bold').text())]

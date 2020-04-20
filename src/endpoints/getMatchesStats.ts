@@ -4,11 +4,11 @@ import { Team } from '../models/Team'
 import { MatchType } from '../enums/MatchType'
 import { Map } from '../enums/Map'
 import { MapSlug } from '../enums/MapSlug'
-import { HLTVConfig } from '../config'
 import { fetchPage, toArray } from '../utils/mappers'
+import { defaultConfig as config } from '../config'
 import { RankingFilter } from '../enums/RankingFilter'
 
-export const getMatchesStats = (config: HLTVConfig) => async ({
+export const getMatchesStats = (proxy: string) => async ({
   startDate,
   endDate,
   matchType,
@@ -31,10 +31,7 @@ export const getMatchesStats = (config: HLTVConfig) => async ({
   let matches: MatchStats[] = []
 
   do {
-    $ = await fetchPage(
-      `${config.hltvUrl}/stats/matches?${query}&offset=${page * 50}`,
-      config.loadPage
-    )
+    $ = await fetchPage(`${config.hltvUrl}/stats/matches?${query}&offset=${page * 50}`, proxy)
     page++
 
     matches = matches.concat(
