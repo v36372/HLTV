@@ -9,16 +9,23 @@ export const getTeamExtraStats = (proxy: string) => async ({
   startDate,
   endDate,
   rankingFilter,
+  minMapCount,
+  maps,
 }: {
   startDate?: string
   endDate?: string
   rankingFilter?: RankingFilter
+  minMapCount?: string
+  maps?: string
 }): Promise<{}> => {
   const query = stringify({
     startDate,
     endDate,
     rankingFilter,
+    minMapCount,
+    maps,
   })
+  console.log(query)
   const f_ct$ = await fetchPage(
     `${config.hltvUrl}/stats/teams/ftu?${query}&side=COUNTER_TERRORIST`,
     proxy
@@ -75,12 +82,13 @@ export const getTeamExtraStats = (proxy: string) => async ({
     var pistols_hash = {}
     toArray(p('.stats-table tbody tr')).forEach((rowpistolEl) => {
       const id = Number(rowpistolEl.find('td').eq(0).find('a').attr('href')!.split('/')[3])
+      const maps_played = Number(rowpistolEl.find('td').eq(1).text())
       const name = rowpistolEl.find('td').eq(0).text()
       const p_win = rowpistolEl.find('td').eq(3).text()
       const p_2_conv = rowpistolEl.find('td').eq(4).text()
       const p_2_break = rowpistolEl.find('td').eq(5).text()
 
-      const newPistol: TeamPistolStats = { id, name, p_win, p_2_conv, p_2_break }
+      const newPistol: TeamPistolStats = { id, maps_played, name, p_win, p_2_conv, p_2_break }
       pistols_hash[id] = newPistol
     })
 

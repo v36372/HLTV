@@ -17,6 +17,7 @@ export interface TeamFTUStats {
 export interface TeamPistolStats {
   id: number
   name: string
+  maps_played: number
   p_win: string
   p_2_conv: string
   p_2_break: string

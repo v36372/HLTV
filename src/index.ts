@@ -14,6 +14,7 @@ import { getTeamExtraStats } from './endpoints/getTeamExtraStats'
 import { getPlayer } from './endpoints/getPlayer'
 import { getEvent } from './endpoints/getEvent'
 import { getPlayerStats } from './endpoints/getPlayerStats'
+import { getPlayerExtraStats } from './endpoints/getPlayerExtraStats'
 import { getPlayerRanking } from './endpoints/getPlayerRanking'
 import { MapSlug } from './enums/MapSlug'
 import { Map } from './enums/Map'
@@ -46,6 +47,7 @@ export class HLTVFactory {
   getEvent = getEvent(this.proxy)
   getEvents = getEvents(this.proxy)
   getPlayerStats = getPlayerStats(this.proxy)
+  getPlayerExtraStats = getPlayerExtraStats(this.proxy)
   getPlayerRanking = getPlayerRanking(this.proxy)
 
   public createInstance(proxy) {
