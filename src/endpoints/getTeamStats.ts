@@ -104,6 +104,10 @@ export const getTeamStats = (proxy: string) => async ({
   */
 
   const getMapStat = (mapEl, i) => mapEl.find('.stats-row').eq(i).children().last().text()
+  const getBiggest = (el, i) => {
+    var a = el.find('.col').eq(i).find('a').attr('href')
+    return a ? a.split('/')[4] : ''
+  }
 
   const mapStats = toArray(mp$('.two-grid .col .stats-rows')).reduce((stats, mapEl) => {
     const mapName = getMapSlug(mapEl.prev().find('.map-pool-map-name').text())
@@ -116,20 +120,8 @@ export const getTeamStats = (proxy: string) => async ({
       totalRounds: Number(getMapStat(mapEl, 2)),
       roundWinPAfterFirstKill: Number(getMapStat(mapEl, 3).split('%')[0]),
       roundWinPAfterFirstDeath: Number(getMapStat(mapEl, 4).split('%')[0]),
-      biggest_win: mapEl
-        .prev()
-        .find('.two-grid.win-defeat-container .col')
-        .eq(0)
-        .find('a')
-        .attr('href')!
-        .split('/')[4],
-      biggest_lost: mapEl
-        .prev()
-        .find('.two-grid.win-defeat-container .col')
-        .eq(1)
-        .find('a')
-        .attr('href')!
-        .split('/')[4],
+      biggest_win: getBiggest(mapEl.next(), 0),
+      biggest_lost: getBiggest(mapEl.next(), 1),
     }
 
     return stats
