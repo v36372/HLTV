@@ -29,6 +29,7 @@ export const getPlayerExtraStats = (proxy: string) => async ({
     minMapCount,
     maps,
   })
+  console.log(query)
   const f$ = await fetchPage(`${config.hltvUrl}/stats/players/flashbangs?${query}`, proxy)
   const p$ = await fetchPage(`${config.hltvUrl}/stats/players/pistols?${query}`, proxy)
   const o$ = await fetchPage(`${config.hltvUrl}/stats/players/openingkills?${query}`, proxy)
