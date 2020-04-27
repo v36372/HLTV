@@ -11,7 +11,7 @@ import { Highlight } from './Highlight'
 import { OddResult, CommunityOddResult } from './OddResult'
 
 export interface PastSerie {
-  readonly id: number
+  id: number
 }
 
 export interface FullMatch {

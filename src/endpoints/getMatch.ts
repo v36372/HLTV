@@ -45,7 +45,7 @@ export const getMatch = (proxy: string) => async ({ id }: { id: number }): Promi
     ? {
         name: teamEls.eq(0).text(),
         id: Number(popSlashSource(teamEls.first().prev())),
-        rank: Number($('div.teamRanking a').eq(0).text().split(':')[1].split('#')[1]),
+        rank: $('div.teamRanking a').eq(0).text() ? Number($('div.teamRanking a').eq(1).text().split(':')[1].split('#')[1]): -1,
       }
     : undefined
 
@@ -53,7 +53,7 @@ export const getMatch = (proxy: string) => async ({ id }: { id: number }): Promi
     ? {
         name: teamEls.eq(1).text(),
         id: Number(popSlashSource(teamEls.last().prev())),
-        rank: Number($('div.teamRanking a').eq(1).text().split(':')[1].split('#')[1]),
+        rank: $('div.teamRanking a').eq(1).text() ? Number($('div.teamRanking a').eq(1).text().split(':')[1].split('#')[1]): -1,
       }
     : undefined
 
@@ -132,11 +132,15 @@ export const getMatch = (proxy: string) => async ({ id }: { id: number }): Promi
   let pastSeries: { team1: PastSerie[]; team2: PastSerie[] } | undefined
   pastSeries = {
     team1: toArray($('table.table.matches').eq(0).find('tr')).map((el) => {
-      var p: PastSerie = { id: Number(el.find('td a').eq(0).attr('href')!.split('/')[2]) }
+      var p: PastSerie = { id: 0 }
+      if (el.find('td').text() == 'No past matches on record') return p
+      p.id = Number(el.find('td a').eq(0).attr('href')!.split('/')[2])
       return p
     }),
     team2: toArray($('table.table.matches').eq(1).find('tr')).map((el) => {
-      var p: PastSerie = { id: Number(el.find('td a').eq(0).attr('href')!.split('/')[2]) }
+      var p: PastSerie = { id: 0 }
+      if (el.find('td').text() == 'No past matches on record') return p
+      p.id = Number(el.find('td a').eq(0).attr('href')!.split('/')[2])
       return p
     }),
   }
