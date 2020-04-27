@@ -45,7 +45,7 @@ export const getMatch = (proxy: string) => async ({ id }: { id: number }): Promi
     ? {
         name: teamEls.eq(0).text(),
         id: Number(popSlashSource(teamEls.first().prev())),
-        rank: $('div.teamRanking a').eq(0).text() ? Number($('div.teamRanking a').eq(1).text().split(':')[1].split('#')[1]): -1,
+		rank: $('div.teamRanking a').eq(0).text().split(':').length > 1 ? Number($('div.teamRanking a').eq(0).text().split(':')[1].split('#')[1]): -1,
       }
     : undefined
 
@@ -53,7 +53,7 @@ export const getMatch = (proxy: string) => async ({ id }: { id: number }): Promi
     ? {
         name: teamEls.eq(1).text(),
         id: Number(popSlashSource(teamEls.last().prev())),
-        rank: $('div.teamRanking a').eq(1).text() ? Number($('div.teamRanking a').eq(1).text().split(':')[1].split('#')[1]): -1,
+		rank: $('div.teamRanking a').eq(1).text().split(':').length > 1 ? Number($('div.teamRanking a').eq(1).text().split(':')[1].split('#')[1]): -1,
       }
     : undefined
 
